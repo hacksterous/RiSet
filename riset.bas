@@ -313,7 +313,8 @@ IF (iobj = 1) THEN
 ELSE
         sun t, ra, dec
 END IF
-tau = 15# * (lmst(instant, glong) - ra)   'hour angle of object
+'tau = 15# * (lmst(instant, glong) - ra)   'hour angle of object
+tau = 15.04107# * (lmst(instant, glong) - ra)   'hour angle of object
 sinalt = sphi * sn(dec) + cphi * cn(dec) * cn(tau)
 END FUNCTION
 
