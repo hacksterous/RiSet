@@ -1,6 +1,6 @@
 'From: http://www.stargazing.net/kepler/riset.bas
 'Compiles with FreeBasic.
-'$lang: "qb"
+#lang "qb"
 DECLARE FUNCTION hm# (ut AS DOUBLE)
 DECLARE FUNCTION sinalt# (iobj AS INTEGER, mjd0 AS DOUBLE, hour AS DOUBLE, glong AS DOUBLE, cphi AS DOUBLE, sphi AS DOUBLE)
 DECLARE FUNCTION fpart# (x AS DOUBLE)
@@ -35,7 +35,6 @@ DIM obname$(5)
 obname$(1) = "Moon"
 obname$(2) = "Sun"
 obname$(3) = "Nautical twilight"
-CLS
 PRINT "   Rise and set for Sun and Moon"
 PRINT "   ============================="
 PRINT
@@ -45,6 +44,13 @@ INPUT "   Day    (dd) - - - - - - - - :", d%
 INPUT "   Time zone (East +) - - - -  :", zone
 INPUT "   Longitude (w neg, decimals) :", glong
 INPUT "   Latitude  (n pos, decimals) :", glat
+'y% = 2019
+'m% = 10
+'d% = 31
+'zone = 5.5
+'glong = 77.62210
+'glat = 12.98889
+'
 glong = -glong  'routines use east longitude negative convention
 zone = zone / 24
 date = mjdFn(y%, m%, d%, 0#) - zone
@@ -174,13 +180,24 @@ cn = COS(x * .0174532925199433#)
 END FUNCTION
 
 DEFDBL A-Z
+FUNCTION fpartdontuse# (x AS DOUBLE)
+	'       returns fractional part of a number
+	x = x - INT(x)
+	IF x < 0 THEN
+		x = x + 1
+	END IF
+	fpartdontuse = x
+END FUNCTION
+
 FUNCTION fpart# (x AS DOUBLE)
 '       returns fractional part of a number
-x = x - INT(x)
-IF x < 0 THEN
-   x = x + 1
-END IF
-fpart = x
+	IF x < 0 THEN
+		x = x - INT(x) - 1
+	elseif x > 0 then
+		x = x - int(x)
+	END IF
+
+	fpart = x
 END FUNCTION
 
 FUNCTION hm (ut AS DOUBLE)
@@ -206,6 +223,7 @@ ut = (mjd - mjd0) * 24
 t = (mjd0 - 51544.5) / 36525
 gmst = 6.697374558# + 1.0027379093# * ut
 gmst = gmst + (8640184.812866# + (.093104 - .0000062 * t) * t) * t / 3600#
+'print "lmst: gmst is "; gmst
 lmst = 24# * fpart((gmst - glong / 15#) / 24#)
 END FUNCTION
 
@@ -272,10 +290,13 @@ y = COSEPS * V - SINEPS * W
 Z = SINEPS * V + COSEPS * W
 rho = SQR(1# - Z * Z)
 dec = (360# / p2) * ATN(Z / rho)
+	'print "Moon decl in degrees is "; dec
 ra = (48# / p2) * ATN(y / (x + rho))
 IF ra < 0 THEN
         ra = ra + 24#
 END IF
+	'print "Moon RA in degrees is "; ra*360#/24#
+
 END SUB
 
 SUB quad (ym AS DOUBLE, y0 AS DOUBLE, yp AS DOUBLE, xe AS DOUBLE, ye AS DOUBLE, z1 AS DOUBLE, z2 AS DOUBLE, nz AS INTEGER)
