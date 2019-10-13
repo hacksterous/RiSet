@@ -180,16 +180,16 @@ cn = COS(x * .0174532925199433#)
 END FUNCTION
 
 DEFDBL A-Z
-FUNCTION fpartdontuse# (x AS DOUBLE)
+FUNCTION fpart# (x AS DOUBLE)
 	'       returns fractional part of a number
 	x = x - INT(x)
 	IF x < 0 THEN
 		x = x + 1
 	END IF
-	fpartdontuse = x
+	fpart = x
 END FUNCTION
 
-FUNCTION fpart# (x AS DOUBLE)
+FUNCTION fpartdontuse# (x AS DOUBLE)
 '       returns fractional part of a number
 	IF x < 0 THEN
 		x = x - INT(x) - 1
@@ -197,7 +197,7 @@ FUNCTION fpart# (x AS DOUBLE)
 		x = x - int(x)
 	END IF
 
-	fpart = x
+	fpartdontuse = x
 END FUNCTION
 
 FUNCTION hm (ut AS DOUBLE)
